@@ -1,4 +1,4 @@
-from end_checking import LOG_FILES
+from custom_things import LOG_FILES
 
 # IMPORT DISCORD.PY. ALLOWS ACCESS TO DISCORD'S API.
 import discord
