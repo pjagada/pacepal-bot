@@ -1,4 +1,4 @@
-from custom_things import LOG_FILES
+from custom_things import LOG_FILES, ADVANCEMENT, MESSAGE, CHANNEL_ID
 
 # IMPORT DISCORD.PY. ALLOWS ACCESS TO DISCORD'S API.
 import discord
@@ -19,10 +19,9 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 intents = discord.Intents.default()
 intents.message_content = True
 
-
-last_end_lines = {}
+last_found_lines = {}
 for log_file in LOG_FILES:
-    last_end_lines[log_file] = ""
+    last_found_lines[log_file] = ""
 stamps = [0 for i in range(len(LOG_FILES))]
 
 class MyClient(discord.Client):
@@ -31,7 +30,7 @@ class MyClient(discord.Client):
         for guild in bot.guilds:
             print(f"- {guild.id} (name: {guild.name})")
             guild_count = guild_count + 1
-        print("SampleDiscordBot is in " + str(guild_count) + " guilds.")
+        print("Peej Pacepal Bot is in " + str(guild_count) + " guilds.")
     
     async def setup_hook(self) -> None:
         # start the task to run in the background
@@ -39,22 +38,22 @@ class MyClient(discord.Client):
 
     @tasks.loop(seconds=2)  # task runs every 2 seconds
     async def my_background_task(self):
-        channel = self.get_channel(986431075217707021)  # channel ID goes here
+        channel = self.get_channel(CHANNEL_ID)
         for i in range(len(LOG_FILES)):
             log_file = LOG_FILES[i]
-            stamp = os.stat(log_file).st_mtime
-            if stamp != stamps[i]:
-                stamps[i] = stamp
+            stamp = os.stat(log_file).st_mtime # gets the time the file was last modified
+            if stamp != stamps[i]: # if the file was modified since the last time we checked
+                stamps[i] = stamp # update the stamp
                 with open(log_file, "r") as f:
-                    for line in (f.readlines()[-15:]):
-                        if "has made the advancement [The End?]" in line:
-                            print("end in line")
-                            if last_end_lines[log_file] != line:
-                                last_end_lines[log_file] = line
+                    for line in (f.readlines()[-15:]): # read the last 15 lines
+                        if f"has made the advancement [{ADVANCEMENT}]" in line:
+                            print("advancement in line")
+                            if last_found_lines[log_file] != line: # if the line is different from the last time we checked
+                                last_found_lines[log_file] = line
                                 print("sending the message")
-                                await channel.send("gravel seed end enter https://www.twitch.tv/peej918")
+                                await channel.send(MESSAGE)
                                 break
-                            else:
+                            else: 
                                 print("same line")
                                 break
 
