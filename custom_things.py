@@ -1,6 +1,6 @@
 INSTANCES_DIRECTORY = 'C:/MultiMC/instances'
 INSTANCES = ["/1.17.1_1", "/1.17.1_2", "/1.17.1_3"]
-ADVANCEMENT = "The End?"
+ADVANCEMENT = "Eye Spy"
 MESSAGE = "gravel seed end enter https://www.twitch.tv/peej918"
 CHANNEL_ID = 946866237487587368
 
